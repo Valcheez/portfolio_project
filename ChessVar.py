@@ -109,5 +109,30 @@ class ChessVar:
         """Switches players"""
         self._turn = 'black' if self._turn == 'white' else 'white'
 
-    def update_game_state(self):
+        def update_game_state(self):
+        """Checks if the game has been won"""
+        king_positions = {pos: piece for pos, piece in self._board.items() if piece and piece.get_type() == 'King'}
+        white_king_alive = any(piece.get_color() == 'white' for piece in king_positions.values())
+        black_king_alive = any(piece.get_color() == 'black' for piece in king_positions.values())
 
+        if not white_king_alive:
+            self._game_state = 'BLACK_WON'
+        elif not black_king_alive:
+            self._game_state = 'WHITE_WON'
+
+    def print_board(self):
+        """Prints the board in a readable format"""
+        columns = 'abcdefgh'
+        rows = '87654321'
+        print('  a  b  c  d  e  f  g  h')
+        for row in rows:
+            row_display = row + ' '
+            for col in columns:
+                piece = self._board[col + row]
+                if piece:
+                    row_display += piece.get_type()[0].upper() if piece.get_color() == 'white' else piece.get_type()[0].lower()
+                else:
+                    row_display += '.'
+                row_display += '  '
+            print(row_display)
+        print()
